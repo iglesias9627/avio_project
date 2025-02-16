@@ -1,0 +1,67 @@
+services:
+  traefik:
+    image: traefik:v3.3.3
+    restart: always
+    command:
+      - "--api.dashboard=true"
+      - "--api.insecure=true"  # Remove this in production
+      - "--providers.docker=true"
+      - "--entrypoints.web.address=:80"
+    ports:
+      - "80:80" # HTTP
+      - "8080:8080" # Traefik Dashboard
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+  mongo:
+    image: mongo
+    restart: always
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin
+    ports:
+      - 27017:27017
+    volumes:
+      - ./mongo/data:/data/db
+    labels:
+      - "traefik.enable=false"
+  app:
+    image: test_app
+    restart: always
+    environment:
+      - PORT=4000
+      - MONGO_DB=avio-book-project
+      - MONGO_USER=admin
+      - MONGO_PASS=admin
+      - MONGO_HOST=mongo
+      - MONGO_PORT=27017
+      - MONGO_AUTH_SOURCE=admin
+      - FIREBASE_API_KEY=AIzaSyBR6JWwOYB_UBIFPnFF5G4iE97loYF_c30
+      - FIREBASE_AUTH_DOMAIN=aviobook-api.firebaseapp.com
+      - FIREBASE_PROJECT_ID=aviobook-api
+      - FIREBASE_STORAGE_BUCKET=aviobook-api.firebasestorage.app
+      - FIREBASE_MESSAGING_SENDER_ID=1083651087127
+      - FIREBASE_APP_ID=1:1083651087127:web:fd76cf57eac381b40df552
+      - FIREBASE_MEASUREMENT_ID=G-6QFKZSTBRT
+    ports:
+      - "4000:4000"
+    depends_on:
+      - mongo
+    volumes:
+      - ./back-end/firebase-json/service-account-key.json:/path/in/container/service-account-key.json
+    labels:
+      - "traefik.enable=false"
+  mongo-express:
+    image: mongo-express
+    restart: always
+    depends_on:
+      - mongo
+    environment:
+      - ME_CONFIG_BASICAUTH_USERNAME=admin-express
+      - ME_CONFIG_BASICAUTH_PASSWORD=admin
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=admin
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=admin
+      - ME_CONFIG_MONGODB_SERVER=mongo
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.mongo.rule=Host(`mongo.avio`)"
+      - "traefik.http.routers.mongo.entrypoints=web"
