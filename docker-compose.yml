@@ -25,7 +25,7 @@ services:
     labels:
       - "traefik.enable=false"
   app:
-    image: test_app
+    image: iglesias9627/avio_flight_api:v0.0.1
     restart: always
     environment:
       - PORT=4000
@@ -46,8 +46,6 @@ services:
       - "4000:4000"
     depends_on:
       - mongo
-    volumes:
-      - ./back-end/firebase-json/service-account-key.json:/path/in/container/service-account-key.json
     labels:
       - "traefik.enable=false"
   mongo-express:

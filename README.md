@@ -37,3 +37,25 @@ Before running the application, make sure you have the following installed:
 git clone https://github.com/iglesias9627/avio_project.git
 cd avio_project
 
+## Deploy using Docker
+
+This application was executed using Docker version 4.37.1.
+
+To deploy the application using Docker, follow these steps:
+
+1. Navigate to the directory where the `docker-compose.yml` file is located.
+
+    ```bash
+    cd avio_project
+    ```
+
+2. Run the following command in the terminal to start the Docker containers in the background.
+
+    ```bash
+    docker-compose up -d
+    ```
+
+This command will initiate the deployment process and run the Docker containers detached from the terminal.
+
+`avio_project_mongo/data` will store the data from MongoDB to persist data.
+
