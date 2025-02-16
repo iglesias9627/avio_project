@@ -36,6 +36,7 @@ Before running the application, make sure you have the following installed:
 ```bash
 git clone https://github.com/iglesias9627/avio_project.git
 cd avio_project
+```
 
 ## Deploy using Docker
 
@@ -57,5 +58,11 @@ To deploy the application using Docker, follow these steps:
 
 This command will initiate the deployment process and run the Docker containers detached from the terminal.
 
-`avio_project_mongo/data` will store the data from MongoDB to persist data.
+`avio_project_mongo/data` will store the data from MongoDB to persist data.     
 
+## Docker Images
+When executing docker-compose up -d, Docker will automatically download the images hosted in my public DockerHub repository. However, if you prefer to download the image separately beforehand, you can use the following command:
+
+```bash 
+docker pull iglesias9627/avio_flight_api:v0.0.1
+```
